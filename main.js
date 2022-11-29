@@ -4,6 +4,7 @@ import { VectorTile, MapboxVector } from "ol/layer";
 import { VectorTile as VectorTileSource, WMTS } from "ol/source";
 import { MVT } from "ol/format";
 import Synchronize from "ol-ext/interaction/Synchronize";
+import { applyStyle } from "ol-mapbox-style";
 
 // import TileLayer from "ol/layer/Tile";
 // import OSM from "ol/source/OSM";
@@ -37,8 +38,8 @@ const mapboxLayer = new MapboxVector({
 const planignLayer = new VectorTile({
   title: "Plan IGN",
   description: "Plan IGN Vecteur tuilÃ©",
-  mapboxStyleUrl:
-    "https://wxs.ign.fr/static/vectorTiles/styles/BDTOPO/classique.json",
+  // mapboxStyleUrl:
+  // "https://wxs.ign.fr/static/vectorTiles/styles/BDTOPO/classique.json",
   // mapboxStyleSource: "normal",
   visible: true,
   source: new VectorTileSource({
@@ -52,12 +53,36 @@ const planignLayer = new VectorTile({
     '<a href="https://geoservices.ign.fr/documentation/geoservices/vecteur-tuile.html">&copy; IGN</a>',
 });
 
+const url_style =
+  "https://wxs.ign.fr/essentiels/static/vectorTiles/styles/PLAN.IGN/standard.json";
+fetch(url_style)
+  .then((res) => res.json())
+  .then((style) => {
+    applyStyle(planignLayer, style, "plan_ign").then(function () {});
+  });
+
+// const vlayer = new VectorTile({
+//   title: "Plan IGN vecteur",
+//   renderMode: "hybrid",
+//   source: new VectorTileSource({
+//     tilePixelRatio: 1,
+//     tileGrid: ol.tilegrid.createXYZ({ maxZoom: 19 }),
+//     format: new MVT(),
+//     projection: new ol.proj.Projection({ code: "EPSG:3857" }),
+//     url: url_pbf,
+//     attributions: attribution,
+//   }),
+//   declutter: true,
+//   styleUrl:
+//     "https://wxs.ign.fr/essentiels/static/vectorTiles/styles/PLAN.IGN/standard.json",
+// });
+
 const planignLayer2 = new VectorTile({
   title: "Plan IGN",
   description: "Plan IGN Vecteur tuilÃ©",
-  mapboxStyleUrl:
-    "https://wxs.ign.fr/latuile/static/vectorTiles/styles/PLAN.IGN/standard.json",
-  mapboxStyleSource: "plan_ign",
+  // mapboxStyleUrl:
+  //   "https://wxs.ign.fr/latuile/static/vectorTiles/styles/PLAN.IGN/standard.json",
+  // mapboxStyleSource: "plan_ign",
   visible: true,
   source: new VectorTileSource({
     format: new MVT(),
@@ -68,9 +93,17 @@ const planignLayer2 = new VectorTile({
     '<a href="https://geoservices.ign.fr/documentation/geoservices/vecteur-tuile.html">&copy; IGN</a>',
 });
 
+const url_style2 =
+  "https://wxs.ign.fr/essentiels/static/vectorTiles/styles/PLAN.IGN/accentue.json";
+fetch(url_style2)
+  .then((res) => res.json())
+  .then((style) => {
+    applyStyle(planignLayer2, style, "plan_ign").then(function () {});
+  });
+
 const map1 = new Map({
   target: "map1",
-  layers: [mapboxLayer],
+  layers: [planignLayer],
   view: new View({
     center: [0, 0],
     zoom: 2,
@@ -79,12 +112,7 @@ const map1 = new Map({
 
 const map2 = new Map({
   target: "map2",
-  layers: [
-    // new TileLayer({
-    //   source: new OSM()
-    // })
-    planignLayer2,
-  ],
+  layers: [planignLayer2],
   view: new View({
     center: [0, 0],
     zoom: 2,
